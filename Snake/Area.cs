@@ -127,5 +127,7 @@ namespace Snake
             this.snake.LengthUp();
             this.food = new Food(size, snake);
         }
+        public int TotalScore()
+            => (snake.Size - 3) * 10;
     }
 }

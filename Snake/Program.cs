@@ -21,7 +21,7 @@ namespace Snake
                 area.newDirection(Console.ReadKey().Key);
                 
             }
-            Console.WriteLine("GAME OVER!!!");
+            Console.WriteLine($"GAME OVER!!! Your score: {area.TotalScore()}");
 
         }
 
