@@ -12,7 +12,7 @@ namespace Snake
         {
             area = new Area();
             status = Status.play;
-            timer = new Timer(2000);
+            timer = new Timer(1500);
             timer.Elapsed += OnTimedEvent;
             timer.AutoReset = true;
             timer.Enabled = true;

@@ -94,11 +94,13 @@ namespace Snake
         }
         public Status statusCheck()
         {
-            if (grid[snake.Location[0, 1], snake.Location[0, 0]] == '%' 
-                || grid[snake.Location[0, 1], snake.Location[0, 0]] == '#')
+            if (grid[snake.Location[0, 1], snake.Location[0, 0]] == '%')
                 return Status.over;
-            else if (grid[snake.Location[0, 1], snake.Location[0, 0]] == '$')
+            else if (snake.Location[0, 0] == food.X && snake.Location[0, 1] == food.Y)
                 return Status.eat;
+            for (int i = 2; i < snake.Size; i++)
+                if (snake.Location[0, 0] == snake.Location[i, 0] && snake.Location[0, 1] == snake.Location[i, 1])
+                    return Status.over;
             return Status.play;
         }
 

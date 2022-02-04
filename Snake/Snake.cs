@@ -60,17 +60,17 @@ namespace Snake
         }
         public void LengthUp()
         {
-            size = (ushort)(size + 1);
-            ushort[,] temp = new ushort[size,2];
-            temp[size - 1, 0] = phantomTail[0, 0];
-            temp[size - 1, 1] = phantomTail[0, 1];
-            for (int i = 0; i < size - 2; i++)
+            ushort[,] temp = new ushort[size + 1, 2];
+            temp[size, 0] = phantomTail[0, 0];
+            temp[size, 1] = phantomTail[0, 1];
+            for (int i = 0; i < size - 1; i++)
             {
                 temp[i, 0] = Location[i, 0];
                 temp[i, 1] = Location[i, 1];
             }
             Location = new ushort[size,2];
             Location = temp;
+            size = ++size;
         }
 
     }
