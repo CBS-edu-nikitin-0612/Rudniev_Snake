@@ -10,9 +10,9 @@ namespace Snake
     {
         private ushort size;
         public Direction direction;
-        public ushort[,] Location;
+        public ushort[,] Location; // почему не int?
         private ushort[,] phantomTail;
-        public ushort Size { get => size; set => size = value; }
+        public ushort Size { get => size; set => size = value; } 
 
 
         public Snake()
@@ -29,17 +29,22 @@ namespace Snake
         }
         public Snake(byte sizeArea)
         {
+            // в конструкторе лучше не создавать логику роботы. Для этого есть методы.
+            // Если нужна логика -> создайте метод InitSnake() и там выполните нужные действия.
+            // Конструктор нужен для инициализации полей значениями, которые передал пользователь.
+
             size = 3;
             ushort center = (ushort)(sizeArea / 2 - 1);
             direction = Direction.up;
             this.Location = new ushort[size, 2];
             for (int i = 0; i < size / 2; i++)
             {
-                Location[i, 0] = (ushort)(sizeArea / 2 - 1 + i);
-                Location[i, 1] = center;
-            }
+                Location[i, 0] = (ushort)(sizeArea / 2 - 1 + i); // Это не сильно ресурсозатратная программа. 
+                Location[i, 1] = center;                         // Можно было и тип int везде использовать. 
+            }                                                    // Больше у процессора ресурсов уходит на преобразование ushort -> byte.
             phantomTail = new ushort[1, 2];
         }
+
         public void Move()
         {
             phantomTail[0, 0] = Location[size - 1, 0];
@@ -58,6 +63,7 @@ namespace Snake
             else if (direction == Direction.right)
                 Location[0, 1] += 1;
         }
+
         public void LengthUp()
         {
             ushort[,] temp = new ushort[size + 1, 2];
@@ -70,6 +76,7 @@ namespace Snake
             }
             Location = new ushort[size,2];
             Location = temp;
+           // почесу нельзя сразу сделать // size++; Зачем переприсаивать еще?
             size = ++size;
         }
 
