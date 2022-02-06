@@ -10,12 +10,17 @@ namespace Snake
         private static Timer timer;
         static void Main(string[] args)
         {
+            // Я всегда рекомендую выносить логику роботы из Main. Например в другой метод -> StartGame()/InitialGame()
+            // Или что-то на подобие...
             area = new Area();
             status = Status.play;
+            // мне не совсем нравится реализация через подписку на событие таймера. 
+            // как то сильно долго приходиться ждать. 
             timer = new Timer(1500);
             timer.Elapsed += OnTimedEvent;
             timer.AutoReset = true;
             timer.Enabled = true;
+
             while (status != Status.over)
             {
                 area.newDirection(Console.ReadKey().Key);

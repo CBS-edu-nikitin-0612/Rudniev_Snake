@@ -67,7 +67,7 @@ namespace Snake
             else
                     grid[snake.Location[i, 0], snake.Location[i, 1]] = '#';
         }
-        private void addFoodToGrid()
+        private void addFoodToGrid() // Методы с большой буквы всегда именуются! 
         {
             grid[food.X, food.Y] = '$';
         }
