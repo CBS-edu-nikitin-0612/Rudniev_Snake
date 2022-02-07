@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Timers;
+using System.Threading;
 
 namespace Snake
 {
@@ -7,39 +7,49 @@ namespace Snake
     {
         private static Area area;
         private static Status status;
-        private static Timer timer;
+        private static Thread ThreadPlayGame;
+        private static int SpeedGame;
         static void Main(string[] args)
         {
-            area = new Area();
-            status = Status.play;
-            timer = new Timer(1500);
-            timer.Elapsed += OnTimedEvent;
-            timer.AutoReset = true;
-            timer.Enabled = true;
+            StartGame();
             while (status != Status.over)
             {
-                area.newDirection(Console.ReadKey().Key);
-                
+                area.NewDirection(Console.ReadKey().Key);
             }
-            Console.WriteLine($"GAME OVER!!! Your score: {area.TotalScore()}");
-
         }
 
-        private static void OnTimedEvent(object obj, ElapsedEventArgs e)
+        private static void StartGame()
         {
+            area = new Area(24);
             area.ViewGrid();
-            status = area.statusCheck();
-            if (status == Status.over)
+            SpeedGame = 500;
+            status = Status.play;
+            ThreadPlayGame = new Thread(PlayGame);
+            ThreadPlayGame.Start();
+        }
+        private static void PlayGame()
+        {
+            while (true)
             {
-                timer.Stop();
-                timer.Dispose();
-            }
-            if (status == Status.eat)
-            {
-                area.EatFood();
-                status = Status.play;
-            }
+                Thread.Sleep(SpeedGame);
+                status = area.StatusCheck();
+                if (status == Status.play)
+                    area.MoveSnake();
+                area.DrawSnake();
 
+                if (status == Status.eat)
+                {
+                    area.EatFood();
+                    status = Status.play;
+                    if (SpeedGame > 300)
+                        SpeedGame -= 10;
+                }
+                else if (status == Status.over)
+                {
+                    Console.WriteLine($"GAME OVER!!! Your score: {area.TotalScore()}");
+                    return;
+                }
+            }
         }
     }
 }

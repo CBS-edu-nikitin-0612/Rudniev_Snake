@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Snake
 {
     class Area
     {
-        private byte size;
-        public byte Size
+        private int size;
+        public int Size
         {
             get => size;
             set
@@ -20,8 +16,14 @@ namespace Snake
                     size = 16;
                 else if (value <= 20)
                     size = 20;
-                else
+                else if (value <= 24)
                     size = 24;
+                else if (value <= 28)
+                    size = 28;
+                else if (value <= 32)
+                    size = 32;
+                else
+                    size = 36;
             }
         }
 
@@ -30,20 +32,17 @@ namespace Snake
         Snake snake;
         Food food;
 
-        public Area()
-        {
-            this.size = 12;
-            this.snake = new Snake();
-            this.food = new Food(size, snake);
-        }
-        public Area(byte size)
+        public Area() : this(12) { }
+        public Area(int size)
         {
             this.Size = size;
+            CreateGrid(size);
             this.snake = new Snake(size);
-            this.food = new Food(size, snake);
+            this.food = new Food();
+            this.food.CreateNewFood(size, snake);
         }
 
-        private void createGrid(byte size)
+        private void CreateGrid(int size)
         {
             this.grid = new char[size, size];
             for (int i = 0; i < size; i++)
@@ -59,44 +58,51 @@ namespace Snake
                     else
                         grid[i, j] = ' ';
         }
-        private void addSnakeToGrid()
+        public void DrawSnake()
         {
+            Console.ForegroundColor = ConsoleColor.Red;
             for (int i = 0; i < snake.Location.Length / 2; i++)
                 if (i == 0)
-                    grid[snake.Location[i, 0], snake.Location[i, 1]] = '@';
-            else
-                    grid[snake.Location[i, 0], snake.Location[i, 1]] = '#';
+                {
+                    Console.SetCursorPosition(snake.Location[i, 1], snake.Location[i, 0]);
+                    Console.Write('@');
+                }
+                else
+                {
+                    Console.SetCursorPosition(snake.Location[i, 1], snake.Location[i, 0]);
+                    Console.Write('#');
+                }
+            Console.SetCursorPosition(snake.phantomTail[0, 1], snake.phantomTail[0, 0]);
+            Console.Write(' ');
+            Console.SetCursorPosition(0, size + 1);
         }
-        private void addFoodToGrid()
+        public void MoveSnake() => snake.MoveSnake();
+        private void DrawFood()
         {
-            grid[food.X, food.Y] = '$';
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.SetCursorPosition(food.X, food.Y);
+            Console.Write('$');
+            Console.SetCursorPosition(0, size + 1);
         }
         public void ViewGrid()
         {
-            createGrid(size);
-            addFoodToGrid();
-            snake.Move();
-            addSnakeToGrid();
+            CreateGrid(size);
 
             Console.Clear();
+            Console.ForegroundColor = ConsoleColor.White;
             for (int i = 0; i < this.size; i++)
             {
                 for (int j = 0; j < this.size; j++)
-                {
-                    if (grid[i, j] == '%')
-                        Console.ForegroundColor = ConsoleColor.White;
-                    Console.Write(grid[i, j]);
-                    Console.ForegroundColor = ConsoleColor.Gray;
-                }
+                    Console.Write(grid[i, j]);  
                 Console.WriteLine();
             }
-
+            DrawFood();
         }
-        public Status statusCheck()
+        public Status StatusCheck()
         {
             if (grid[snake.Location[0, 1], snake.Location[0, 0]] == '%')
                 return Status.over;
-            else if (snake.Location[0, 0] == food.X && snake.Location[0, 1] == food.Y)
+            else if (snake.Location[0, 1] == food.X && snake.Location[0, 0] == food.Y)
                 return Status.eat;
             for (int i = 2; i < snake.Size; i++)
                 if (snake.Location[0, 0] == snake.Location[i, 0] && snake.Location[0, 1] == snake.Location[i, 1])
@@ -104,7 +110,7 @@ namespace Snake
             return Status.play;
         }
 
-        public void newDirection(ConsoleKey key)
+        public void NewDirection(ConsoleKey key)
         {
             switch (key)
             {
@@ -125,7 +131,8 @@ namespace Snake
         public void EatFood()
         {
             this.snake.LengthUp();
-            this.food = new Food(size, snake);
+            this.food.CreateNewFood(size, snake);
+            DrawFood();
         }
         public int TotalScore()
             => (snake.Size - 3) * 10;

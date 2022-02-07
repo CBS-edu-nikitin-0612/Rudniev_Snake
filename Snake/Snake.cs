@@ -1,49 +1,36 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Snake
 {
     class Snake
     {
-        private ushort size;
+        private int size;
         public Direction direction;
-        public ushort[,] Location;
-        private ushort[,] phantomTail;
-        public ushort Size { get => size; set => size = value; }
+        public int[,] Location;
+        public int[,] phantomTail;
+        public int Size { get => size; set => size = value; }
 
 
-        public Snake()
+        public Snake() : this(12) { }
+        public Snake(int sizeArea)
         {
-            size = 3;
+            this.size = 3;
+            int center = sizeArea / 2;
             direction = Direction.up;
-            this.Location = new ushort[size, 2];
-            for (int i = 0; i < size; i++)
-            {
-                Location[i, 0] = (ushort)(5 + i);
-                Location[i, 1] = 5;
-            }
-            phantomTail = new ushort[1, 2];
-        }
-        public Snake(byte sizeArea)
-        {
-            size = 3;
-            ushort center = (ushort)(sizeArea / 2 - 1);
-            direction = Direction.up;
-            this.Location = new ushort[size, 2];
+            this.Location = new int[size, 2];
             for (int i = 0; i < size / 2; i++)
             {
-                Location[i, 0] = (ushort)(sizeArea / 2 - 1 + i);
+                Location[i, 0] = sizeArea / 2 + i;
                 Location[i, 1] = center;
             }
-            phantomTail = new ushort[1, 2];
+            phantomTail = new int[2, 2];
         }
-        public void Move()
+        public void MoveSnake()
         {
             phantomTail[0, 0] = Location[size - 1, 0];
             phantomTail[0, 1] = Location[size - 1, 1];
+            phantomTail[1, 0] = phantomTail[0, 0];
+            phantomTail[1, 1] = phantomTail[0, 1];
             for (int i = size - 1; i > 0; i--)
             {
                 Location[i, 0] = Location[i-1, 0];
@@ -57,20 +44,24 @@ namespace Snake
                 Location[0, 1] -= 1;
             else if (direction == Direction.right)
                 Location[0, 1] += 1;
+
         }
         public void LengthUp()
         {
-            ushort[,] temp = new ushort[size + 1, 2];
+            int[,] temp = new int[size + 1, 2];
             temp[size, 0] = phantomTail[0, 0];
             temp[size, 1] = phantomTail[0, 1];
+            phantomTail[0, 0] = phantomTail[1, 0];
+            phantomTail[0, 1] = phantomTail[1, 1];
             for (int i = 0; i < size - 1; i++)
             {
                 temp[i, 0] = Location[i, 0];
                 temp[i, 1] = Location[i, 1];
             }
-            Location = new ushort[size,2];
+            size += 1;
+            Location = new int[size,2];
             Location = temp;
-            size = ++size;
+            
         }
 
     }
