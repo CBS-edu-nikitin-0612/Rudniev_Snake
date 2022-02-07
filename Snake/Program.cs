@@ -22,7 +22,7 @@ namespace Snake
         {
             area = new Area(24);
             area.ViewGrid();
-            SpeedGame = 500;
+            SpeedGame = 400;
             status = Status.play;
             ThreadPlayGame = new Thread(PlayGame);
             ThreadPlayGame.Start();
@@ -41,8 +41,8 @@ namespace Snake
                 {
                     area.EatFood();
                     status = Status.play;
-                    if (SpeedGame > 300)
-                        SpeedGame -= 10;
+                    if (SpeedGame > 80)
+                        SpeedGame -= 20;
                 }
                 else if (status == Status.over)
                 {

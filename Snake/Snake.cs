@@ -18,12 +18,18 @@ namespace Snake
             int center = sizeArea / 2;
             direction = Direction.up;
             this.Location = new int[size, 2];
-            for (int i = 0; i < size / 2; i++)
+            for (int i = 0; i < size; i++)
             {
-                Location[i, 0] = sizeArea / 2 + i;
+                Location[i, 0] = center + i;
                 Location[i, 1] = center;
             }
+
             phantomTail = new int[2, 2];
+            for (int i = 0; i < 2; i++)
+            {
+                phantomTail[i, 0] = center + Location.Length / 2 + i;
+                phantomTail[i, 1] = center;
+            }
         }
         public void MoveSnake()
         {
@@ -53,13 +59,13 @@ namespace Snake
             temp[size, 1] = phantomTail[0, 1];
             phantomTail[0, 0] = phantomTail[1, 0];
             phantomTail[0, 1] = phantomTail[1, 1];
-            for (int i = 0; i < size - 1; i++)
+            for (int i = 0; i < size; i++)
             {
                 temp[i, 0] = Location[i, 0];
                 temp[i, 1] = Location[i, 1];
             }
-            size += 1;
-            Location = new int[size,2];
+            size++;
+            Location = new int[size, 2];
             Location = temp;
             
         }

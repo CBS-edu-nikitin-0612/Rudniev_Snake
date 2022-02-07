@@ -58,6 +58,25 @@ namespace Snake
                     else
                         grid[i, j] = ' ';
         }
+        public void ViewGrid()
+        {
+            CreateGrid(size);
+
+            Console.ForegroundColor = ConsoleColor.White;
+            for (int i = 0; i < this.size; i++)
+            {
+                for (int j = 0; j < this.size; j++)
+                {
+                    if (grid[i, j] == '%')
+                        Console.BackgroundColor = ConsoleColor.White;
+                    Console.Write(grid[i, j]);
+                    Console.BackgroundColor = ConsoleColor.Black;
+                }
+                Console.WriteLine();
+            }
+            DrawFood();
+        }
+
         public void DrawSnake()
         {
             Console.ForegroundColor = ConsoleColor.Red;
@@ -84,20 +103,7 @@ namespace Snake
             Console.Write('$');
             Console.SetCursorPosition(0, size + 1);
         }
-        public void ViewGrid()
-        {
-            CreateGrid(size);
 
-            Console.Clear();
-            Console.ForegroundColor = ConsoleColor.White;
-            for (int i = 0; i < this.size; i++)
-            {
-                for (int j = 0; j < this.size; j++)
-                    Console.Write(grid[i, j]);  
-                Console.WriteLine();
-            }
-            DrawFood();
-        }
         public Status StatusCheck()
         {
             if (grid[snake.Location[0, 1], snake.Location[0, 0]] == '%')
@@ -115,16 +121,20 @@ namespace Snake
             switch (key)
             {
                 case ConsoleKey.W:
-                    snake.direction = Direction.up;
+                    if (snake.direction != Direction.down)
+                        snake.direction = Direction.up;
                     break;
                 case ConsoleKey.A:
-                    snake.direction = Direction.left;
+                    if (snake.direction != Direction.right)
+                        snake.direction = Direction.left;
                     break;
                 case ConsoleKey.S:
-                    snake.direction = Direction.down;
+                    if (snake.direction != Direction.up)
+                        snake.direction = Direction.down;
                     break;
                 case ConsoleKey.D:
-                    snake.direction = Direction.right;
+                    if (snake.direction != Direction.left)
+                        snake.direction = Direction.right;
                     break;
             }
         }
